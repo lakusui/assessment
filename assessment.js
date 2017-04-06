@@ -1,27 +1,34 @@
-(function () {
+(function(){
     'use strict';
     const userNameInput = document.getElementById('user-name');
     const assessmentButton = document.getElementById('assessment');
     const resultDivided = document.getElementById('result-area');
     const tweetDivided = document.getElementById('tweet-area');
 
+    userNameInput.onkeydown = (event) => {
+        if (event.keyCode === 13) {
+            assessmentButton.onclick();
+        }
+    };
+
     /**
-    * 指定した要素の子どもを全て除去する
-    * @param {HTMLElement} element HTMLの要素
-    */
-    function removeAllChildren(element) {
-        while (element.firstChild) { // 子どもの要素があるかぎり削除
+     * 指定した要素のこどもを全て削除する 
+     * @param {HTMLement}element HTMLの要素
+     */
+    function removeAllChildren(element){
+        while (element.firstChild){//子供の要素があるかぎり削除
             element.removeChild(element.firstChild);
         }
     }
+   
 
     assessmentButton.onclick = () => {
         const userName = userNameInput.value;
-        if (userName.length === 0) { // 名前が空の時は処理を終了する
+        if (userName.length === 0){//名前が空の時は処理を終了する
             return;
         }
-
-        // 診断結果表示エリアの作成
+        
+        //TODO 診断結果表示エリアの作成
         removeAllChildren(resultDivided);
         const header = document.createElement('h3');
         header.innerText = '診断結果';
@@ -32,25 +39,20 @@
         paragraph.innerText = result;
         resultDivided.appendChild(paragraph);
 
-        // ツイートエリアの作成
+        // TODO ツイートエリアの作成
         removeAllChildren(tweetDivided);
         const anchor = document.createElement('a');
         const hrefValue = 'https://twitter.com/intent/tweet?button_hashtag=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E3%81%84%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D&text='
-        + encodeURIComponent(result);
+            + encodeURIComponent(result);
         anchor.setAttribute('href', hrefValue);
         anchor.className = 'twitter-hashtag-button';
         anchor.innerText = 'Tweet #%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E3%81%84%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D';
         tweetDivided.appendChild(anchor);
-
+    
         twttr.widgets.load();
+        
+       
     };
-
-    userNameInput.onkeydown = (event) => {
-        if (event.keyCode === 13) {
-            assessmentButton.onclick();
-        }
-    };
-
     const answers = [
         '{userName}のいいところは声です。{userName}の特徴的な声はみなを惹きつけ、心に残ります。',
         '{userName}のいいところはまなざしです。{userName}に見つめられた人は、気になって仕方がないでしょう。',
@@ -69,28 +71,28 @@
         '{userName}のいいところはその全てです。ありのままの{userName}自身がいいところなのです。',
         '{userName}のいいところは自制心です。やばいと思ったときにしっかりと衝動を押さえられる{userName}が皆から評価されています。'
     ];
-
-    /**
+   /**
     * 名前の文字列を渡すと診断結果を返す関数
     * @param {string} userName ユーザーの名前
     * @return {string} 診断結果
     */
-    function assessment(userName) {
-        // 全文字のコード番号を取得してそれを足し合わせる
-        let sumOfcharCode = 0;
-        for (let i = 0; i < userName.length; i++) {
-            sumOfcharCode = sumOfcharCode + userName.charCodeAt(i);
-        }
+    function assessment(userName){
+       //全文字のコード番号を取得してそれを足し合わせる
+       let sum0fcharCode = 0;
+       for ( let i = 0; i < userName.length; i++){
+           sum0fcharCode = sum0fcharCode + userName.charCodeAt(i);
+       }
 
-        // 文字のコード番号の合計を回答の数で割って添字の数値を求める
-        const index = sumOfcharCode % answers.length;
-        let result = answers[index];
+       //文字のコード番号の合計を解凍の数で割って添え字の数値を求める
+       const index = sum0fcharCode % answers.length;
 
-        result = result.replace(/{userName}/g, userName);
-        return result;
-    }
+       //TODO{userName}をユーザーの名前に置き換える
+       let result = answers[index];    
+       result = result.replace(/\{userName\}/g, userName); 
+       return result;
 
-    // テストコード
+}
+    //　テストコード
     console.assert(
         assessment('太郎') === '太郎のいいところは決断力です。太郎がする決断にいつも助けられる人がいます。',
         '診断結果の文言の特定の部分を名前に置き換える処理が正しくありません。'
